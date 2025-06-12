@@ -7,6 +7,7 @@ Tracklet is a lightweight, local project tracking and metadata management tool d
 - Initialize projects with metadata including name, description, author, tags, and progress stage.
 - Track project progress via completed and todo task lists with automatic percentage calculation.
 - Filter and search projects by tags, stage, or author.
+- List all projects and folders in a directory, showing which are initialized with Tracklet.
 - Command-line interface accessible globally after installation.
 - Supports multiple project stages including Planning, Development, Staging, Production, Abandoned, and On Hold.
 - Default project path is the current directory for convenience.
@@ -37,6 +38,8 @@ tracklet init --name "My Project"
 tracklet init
 ```
 
+You will be interactively prompted for project details if not provided as arguments.
+
 ### Update project metadata and progress
 
 ```bash
@@ -50,6 +53,27 @@ tracklet update --stage "🛠 Development" --completed "Setup,Core Features"
 tracklet search --tag react-native
 tracklet search --stage "🛠 Development"
 ```
+
+### List all projects and folders in a directory
+```bash
+tracklet list
+```
+#### or specify a directory
+```bash
+tracklet list /path/to/projects
+```
+
+this command lists all immediate subfolders, indication which are initialized with Tracklet, along with their tags and stages
+
+## Unistallation
+
+To uninstall Tracklet from your environment, run:
+
+```bash
+pip uninstall tracklet
+```
+
+This removes the package and its CLI command from your system.
 
 ## Project Stages
 
