@@ -4,6 +4,15 @@ from datetime import datetime
 
 META_FILENAME = ".projectmeta"
 
+STAGES = [
+    "🚧 Planning",
+    "🛠 Development",
+    "✅ Staging",
+    "🚀 Production",
+    "🛑 Abandoned",
+    "⏸ On Hold"
+]
+
 def read_metadata(project_path):
     meta_path = os.path.join(project_path, META_FILENAME)
     if not os.path.exists(meta_path):
@@ -25,9 +34,13 @@ def create_default_metadata(project_path, name, description, author, tags, stage
         "tags": tags,
         "progress": {
             "stage": stage,
-            "milestones": []
+            "tasks": {
+                "completed": [],
+                "todo": []
+            }
         },
         "created": datetime.now().strftime("%Y-%m-%d"),
         "last_updated": datetime.now().strftime("%Y-%m-%d")
     }
     write_metadata(project_path, data)
+

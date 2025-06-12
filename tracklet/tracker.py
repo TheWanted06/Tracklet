@@ -23,7 +23,8 @@ def filter_projects(projects, tag=None, stage=None, author=None):
     return filtered
 
 def summarize_progress(meta):
-    milestones = meta.get("progress", {}).get("milestones", [])
-    completed = sum(1 for m in milestones if m.get("completed"))
-    total = len(milestones)
-    return f"{completed}/{total} milestones completed"
+    tasks = meta.get("progress", {}).get("tasks", {})
+    completed = len(tasks.get("completed", []))
+    total = completed + len(tasks.get("todo", []))
+    percent = (completed / total * 100) if total > 0 else 0
+    return f"{percent:.1f}% ({completed}/{total} tasks)"

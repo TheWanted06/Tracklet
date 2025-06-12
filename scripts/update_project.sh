@@ -8,7 +8,7 @@ read -p "New author (leave blank to skip): " author
 read -p "New tags (comma-separated, leave blank to skip): " tags
 read -p "New progress stage (leave blank to skip): " stage
 
-cmd="python3 -m project_tracker.cli update \"$path\""
+cmd="python3 -m tracklet.cli update \"$path\""
 [ -n "$name" ] && cmd+=" --name \"$name\""
 [ -n "$description" ] && cmd+=" --description \"$description\""
 [ -n "$author" ] && cmd+=" --author \"$author\""

@@ -1,4 +1,4 @@
-# project_tracker/__init__.py
+# tracklet/__init__.py
 
 # Package initialization for project_tracker
 # Expose core modules for easy imports

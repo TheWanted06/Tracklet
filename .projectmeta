@@ -1,0 +1,11 @@
+author: Daniel Tshipuk
+created: '2025-06-12'
+description: An app that helps individuals tag and track project progress
+last_updated: '2025-06-12'
+name: Tracklet
+progress:
+  milestones: []
+  stage: WIP
+tags:
+- Cli
+- Python

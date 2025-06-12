@@ -10,4 +10,4 @@ read -p "Progress stage (default: WIP): " stage
 
 stage=${stage:-WIP}
 
-python3 -m project_tracker.cli init "$path" --name "$name" --description "$description" --author "$author" --tags "$tags" --stage "$stage"
+python3 -m tracklet.cli init "$path" --name "$name" --description "$description" --author "$author" --tags "$tags" --stage "$stage"
