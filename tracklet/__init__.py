@@ -7,6 +7,7 @@ from .metadata import read_metadata, write_metadata, create_default_metadata
 from .tracker import find_projects, filter_projects, summarize_progress
 from .cli import main as cli_main
 from .utils import is_project_folder
+from ._version import __version__
 
 __all__ = [
     "read_metadata",
@@ -17,4 +18,5 @@ __all__ = [
     "summarize_progress",
     "cli_main",
     "is_project_folder",
+    "__verion__",
 ]

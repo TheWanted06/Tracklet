@@ -1,6 +1,32 @@
 import os
 from .metadata import read_metadata
 
+def collect_all_tags(base_path):
+    tags_set = set()
+
+    # Check base_path itself
+    if os.path.isfile(os.path.join(base_path, ".projectmeta")):
+        meta = read_metadata(base_path)
+        if meta and "tags" in meta:
+            tags_set.update(meta["tags"])
+
+    # Check immediate subdirectories
+    try:
+        entries = os.listdir(base_path)
+    except FileNotFoundError:
+        return []
+
+    for entry in entries:
+        full_path = os.path.join(base_path, entry)
+        if os.path.isdir(full_path):
+            meta_path = os.path.join(full_path, ".projectmeta")
+            if os.path.isfile(meta_path):
+                meta = read_metadata(full_path)
+                if meta and "tags" in meta:
+                    tags_set.update(meta["tags"])
+
+    return sorted(tags_set)
+
 def find_projects(base_path):
     projects = []
 

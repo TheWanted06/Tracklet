@@ -4,14 +4,15 @@ Tracklet is a lightweight, local project tracking and metadata management tool d
 
 ## Features
 
-- Initialize projects with metadata including name, description, author, tags, and progress stage.
-- Track project progress via completed and todo task lists with automatic percentage calculation.
-- Filter and search projects by tags, stage, or author.
-- List all projects and folders in a directory, showing which are initialized with Tracklet.
-- Command-line interface accessible globally after installation.
-- Supports multiple project stages including Planning, Development, Staging, Production, Abandoned, and On Hold.
-- Default project path is the current directory for convenience.
-- Optional project name defaults to current directory name if not specified.
+- Initialize projects with metadata (name, description, author, tags, stage).
+- Interactive prompts for project stage (with arrow-key selection) and tag autocomplete.
+- Update project metadata and progress interactively.
+- Search and filter projects by tag, stage, or author (with tag autocomplete).
+- List all projects and folders in a directory, showing which are initialized.
+- Uninit a project to remove its metadata.
+- Prevents duplicate initialization and warns if a project is already initialized.
+- Easy version management with a single-source version string.
+- Automatic dependency installation via setup.py.
 
 ## Installation
 
@@ -21,6 +22,8 @@ Tracklet is a lightweight, local project tracking and metadata management tool d
 ```bash
 pip install --editable .
 ```
+
+All required dependencies (e.g. InquirerPy, PyYAML) are installed automatically.
 
 3. Ensure your Python user scripts directory (e.g., `~/.local/bin`) is in your PATH.
 
@@ -38,7 +41,9 @@ tracklet init --name "My Project"
 tracklet init
 ```
 
-You will be interactively prompted for project details if not provided as arguments.
+- Prompts for all metadata interactively.
+- Prevents duplicate initialization (warns if already initialized).
+- Use --force to overwrite existing metadata if needed.
 
 ### Update project metadata and progress
 
@@ -55,10 +60,13 @@ tracklet search --stage "🛠 Development"
 ```
 
 ### List all projects and folders in a directory
+
 ```bash
 tracklet list
 ```
+
 #### or specify a directory
+
 ```bash
 tracklet list /path/to/projects
 ```
@@ -75,6 +83,14 @@ pip uninstall tracklet
 
 This removes the package and its CLI command from your system.
 
+To remove build artifacts, caches, and metadata after unistalling, run:
+
+```bach
+python scripts/clean.py
+```
+
+This will remove `__pycache__`, `.egg-info`, build folders, and other common leftovers.
+
 ## Project Stages
 
 - 🚧 Planning
@@ -83,6 +99,14 @@ This removes the package and its CLI command from your system.
 - 🚀 Production
 - 🛑 Abandoned
 - ⏸ On Hold
+
+---
+
+## Versioning
+
+Tracklet’s version is stored in `tracklet/_version.py` and is updated for each release.
+
+---
 
 ## License
 
@@ -96,8 +120,8 @@ Pull requests and issues are welcome. Please ensure tests are updated accordingl
 
 ## Troubleshooting
 
-If `tracklet` command is not found after installation, ensure your Python scripts directory is in your PATH and restart your terminal session.
+If `tracklet` is not found, ensure your scripts directory is in your PATH and reinstall with `pip install --user .` or `pip install --editable .`.
+
+If you see ModuleNotFoundError: No module named 'InquirerPy', run `pip install InquirerPy`.
 
 ---
-
-

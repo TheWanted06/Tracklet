@@ -1,10 +1,17 @@
+import os
+
+version_ns = {}
+with open(os.path.join("tracklet", "_version.py")) as f:
+    exec(f.read(), version_ns)
+
 from setuptools import setup, find_packages
 
 setup(
     name="tracklet",
-    version="0.1.0",
+    version=version_ns["__version__"],
     packages=find_packages(),
     install_requires=[
+        "InquirerPy",
         "pyyaml>=6.0",
     ],
     entry_points={

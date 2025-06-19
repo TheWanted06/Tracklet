@@ -2,23 +2,51 @@ import argparse
 import os
 from pathlib import Path
 from .metadata import create_default_metadata, read_metadata, write_metadata, STAGES
-from .tracker import find_projects, filter_projects, summarize_progress, list_projects
+from .tracker import find_projects, filter_projects, summarize_progress, list_projects, collect_all_tags
+from InquirerPy import inquirer
 
 def prompt_stage(default="🚧 Planning"):
-    print("Select project stage:")
-    for i, stage in enumerate(STAGES, 1):
-        print(f"{i}. {stage}")
-    choice = input(f"Enter number (default {default}): ").strip()
-    if choice.isdigit():
-        idx = int(choice) - 1
-        if 0 <= idx < len(STAGES):
-            return STAGES[idx]
-    return default
+    stages = STAGES
+    try:
+        selected = inquirer.select(
+            message="Select project stage:",
+            choices=stages,
+            default=default,
+            cycle=True,
+        ).execute()
+        return selected
+    except KeyboardInterrupt:
+        return default
+
+def prompt_tags_with_autocomplete(base_path, default_tags=None):
+    existing_tags = collect_all_tags(base_path)
+    if not existing_tags:
+        return input("Enter tags (comma-separated): ").split(",")
+    default_tags = default_tags or []
+
+    try:
+        selected_tags = inquirer.fuzzy(
+            message="Tags (autocomplete, select multiple with space):",
+            choices=existing_tags,
+            multiselect=True,
+            default=default_tags,
+            instruction="Type to autocomplete, space to select, enter to confirm",
+        ).execute()
+        return selected_tags
+    except KeyboardInterrupt:
+        return default_tags
 
 def init_project(args):
 
     # Use provided path or default to current directory
     project_path = args.path
+
+    # Check if project is already initialized
+    meta_path = os.path.join(project_path, ".projectmeta")
+    if os.path.exists(meta_path):
+        print(f"Project at '{project_path}' is already initialized.")
+        print("If you want to re-initialize, please uninit the project first or delete the existing .projectmeta file. Or else please use --force to overwrite existing metadata.")
+        return
 
     # Default project name is the folder name
     default_name = os.path.basename(os.path.abspath(project_path))
@@ -40,10 +68,12 @@ def init_project(args):
     if not author:
         author = input("Author (optional): ").strip()
 
-    # Prompt for tags if not provided
+   # Prompt for tags with autocomplete
     tags = args.tags
-    if not tags:
-        tags = input("Tags (comma-separated, optional): ").strip()
+    if tags:
+        tag_list = [t.strip() for t in tags.split(",") if t.strip()]
+    else:
+        tag_list = prompt_tags_with_autocomplete(project_path)
 
     # Prompt for stage with default
     stage = args.stage
@@ -56,11 +86,18 @@ def init_project(args):
     if not os.path.exists(project_path):
         print(f"Error: Path {project_path} does not exist.")
         return
-    # Parse tags list
-    tag_list = [t.strip() for t in tags.split(",")] if tags else []
 
     create_default_metadata(project_path, name, description, author, tag_list, stage)
     print(f"Initialized project metadata at {project_path}")
+
+def uninit_project(args):
+    project_path = args.path
+    meta_path = os.path.join(project_path, ".projectmeta")
+    if os.path.exists(meta_path):
+        os.remove(meta_path)
+        print(f"Removed .projectmeta from {project_path}. Project is now uninitialized.")
+    else:
+        print(f"No .projectmeta found in {project_path}. Project was not initialized.")
 
 def update_project(args):
     project_path = args.path
@@ -98,8 +135,23 @@ def update_project(args):
 
 def search_projects(args):
     base_path = args.base_path
+
+    tag = args.tag
+    if not tag:
+        # Prompt user to select tag with autocomplete
+        tags = collect_all_tags(base_path)
+        if tags:
+            tag = inquirer.fuzzy(
+                message="Select tag to filter by (autocomplete):",
+                choices=tags,
+                multiselect=False,
+                instruction="Type to autocomplete, enter to confirm",
+            ).execute()
+        else:
+            tag = None
+
     projects = find_projects(base_path)
-    filtered = filter_projects(projects, tag=args.tag, stage=args.stage, author=args.author)
+    filtered = filter_projects(projects, tag=tag, stage=args.stage, author=args.author)
 
     if not filtered:
         print("No projects found matching criteria.")
@@ -122,23 +174,28 @@ def list_projects_cli(args):
         return
 
     for p in projects:
-        status = "Initialized" if p["initialized"] else "Not initialized"
+        status_symbol = "●" if p["initialized"] else "○"
+        #status = "Initialized" if p["initialized"] else "Not initialized"
         tags = ", ".join(p["tags"]) if p["tags"] else "-"
         stage = p["stage"] if p["stage"] else "-"
-        print(f"{p['name']}: {status} | Tags: {tags} | Stage: {stage}")
+        #print(f"{p['name']}: {status} | Tags: {tags} | Stage: {stage}")
+        print(f"{status_symbol} {p['name']} | Tags: {tags} | Stage: {stage}")
 
 def main():
     parser = argparse.ArgumentParser(description="Project Tracker CLI")
     subparsers = parser.add_subparsers()
 
     # Init command
-    parser_init = subparsers.add_parser("init", help="Initialize project metadata")
+    parser_init = subparsers.add_parser("init", help="Initialize project metadata with interactive prompts")
     parser_init.add_argument("path", nargs="?", default=os.getcwd(), help="Project folder path (default: current directory)")
-    parser_init.add_argument("--name", nargs="?", default=os.path.basename(os.getcwd()), help="Project name (default: current directory name)")
+    parser_init.add_argument("--name", help="Project name")
     parser_init.add_argument("--description", default="", help="Project description")
     parser_init.add_argument("--author", default="", help="Author name")
     parser_init.add_argument("--tags", default="", help="Comma-separated tags")
-    parser_init.add_argument("--stage", help="Progress stage")
+    parser_init.add_argument("--stage", choices=STAGES, help=f"Stage: {', '.join(STAGES)}")
+    parser_init.add_argument(
+    "--force", action="store_true",
+    help="Force re-initialization by overwriting existing metadata")
     parser_init.set_defaults(func=init_project)
 
     # Update command
@@ -165,6 +222,11 @@ def main():
     parser_list = subparsers.add_parser("list", help="List projects and folders in directory")
     parser_list.add_argument("base_path", nargs="?", default=os.getcwd(), help="Directory to list (default: current directory)")
     parser_list.set_defaults(func=list_projects_cli)
+
+    #uninit command
+    parser_uninit = subparsers.add_parser("uninit", help="Uninitialize a Tracklet project (remove .projectmeta)")
+    parser_uninit.add_argument("path", nargs="?", default=os.getcwd(), help="Project folder path (default: current directory)")
+    parser_uninit.set_defaults(func=uninit_project)
 
     args = parser.parse_args()
     if hasattr(args, "func"):
