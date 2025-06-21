@@ -13,6 +13,8 @@ setup(
     install_requires=[
         "InquirerPy",
         "pyyaml>=6.0",
+        "PyYAML",
+        "rich"
     ],
     entry_points={
         "console_scripts": [

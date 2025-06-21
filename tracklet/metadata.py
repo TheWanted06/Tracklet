@@ -5,12 +5,13 @@ from datetime import datetime
 META_FILENAME = ".projectmeta"
 
 STAGES = [
-    "🚧 Planning",
-    "🛠 Development",
-    "✅ Staging",
-    "🚀 Production",
-    "🛑 Abandoned",
-    "⏸ On Hold"
+    "Planning",
+    "Development",
+    "Staging",
+    "Testing",
+    "Launched",
+    "Abandoned",
+    "On Hold"
 ]
 
 def read_metadata(project_path):
@@ -44,3 +45,10 @@ def create_default_metadata(project_path, name, description, author, tags, stage
     }
     write_metadata(project_path, data)
 
+def delete_metadata(project_path):
+    """Delete the .projectmeta file if it exists."""
+    meta_path = os.path.join(project_path, META_FILENAME)
+    if os.path.isfile(meta_path):
+        os.remove(meta_path)
+        return True
+    return False
