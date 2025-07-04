@@ -1,0 +1,25 @@
+- id: detect_secrets_before_commit
+  trigger: on_git_commit
+  actions:
+    - scan: "secrets"
+    - block_commit_if_found: true
+    - notify: "Maintainer"
+
+- id: validate_package_lock_integrity
+  trigger: before_merge
+  condition: "project_contains: package.json"
+  actions:
+    - run: "npm audit"
+    - reject_merge_on_critical: true
+
+- id: enforce_code_signing
+  trigger: on_release
+  actions:
+    - verify_signature: true
+    - notify_if_unsigned: true
+
+- id: restrict_sensitive_env_vars
+  trigger: on_task_start
+  actions:
+    - check_env: ["AWS_SECRET_ACCESS_KEY", "DB_PASSWORD"]
+    - block_if_present: true

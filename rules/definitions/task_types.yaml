@@ -1,0 +1,14 @@
+- id: feature
+  description: "New functionality or capability"
+
+- id: bugfix
+  description: "Fixes an existing issue or error"
+
+- id: refactor
+  description: "Improves structure or readability"
+
+- id: research
+  description: "Explores options or designs"
+
+- id: documentation
+  description: "Markdown, help text, or doc updates"

@@ -1,0 +1,15 @@
+
+- id: pending
+  description: "Expected but not yet submitted"
+
+- id: submitted
+  description: "Submitted and under review"
+
+- id: approved
+  description: "Reviewed and accepted"
+
+- id: rejected
+  description: "Failed quality gates or needs changes"
+
+- id: archived
+  description: "No longer relevant or used"

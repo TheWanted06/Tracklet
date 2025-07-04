@@ -1,0 +1,17 @@
+- id: ensure_git_synced
+  trigger: before_task_start
+  condition: "git_status != up_to_date"
+  actions:
+    - pull: true
+    - notify: "Repo synced before starting task"
+
+- id: verify_schema_validity
+  trigger: before_task_start
+  actions:
+    - validate: ["task.yaml", "deliverables.yaml"]
+
+- id: branch_exists_for_task
+  trigger: before_task_start
+  condition: "task_type in ['feature', 'bugfix']"
+  actions:
+    - ensure_branch_exists: "feature/{{task_id}}"

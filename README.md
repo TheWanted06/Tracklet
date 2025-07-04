@@ -2,24 +2,27 @@
 
 Tracklet is a lightweight, local project tracking and metadata management tool designed for developers who want to organize, tag, and monitor progress of their projects easily on Windows and WSL environments.
 
-## Features
+## 🚀 Features
 
-- Initialize projects with rich metadata: name, description, author, tags, and stage.
-- Interactive prompts with arrow-key selection for project stages.
-- Tag autocomplete and multi-select support for efficient tagging.
-- Update project metadata and progress interactively or via flexible CLI flags.
-- Search and filter projects by tag, stage, author, or description with include/exclude options.
-- List all projects and folders in a directory, showing initialization status and detailed metadata.
-- Uninitialize projects by safely removing their metadata files.
-- Prevent duplicate initialization and warn if a project is already initialized.
-- Context-aware commands:  
-  - `init` and `uninit` run inside project directories.  
-  - `list` and `search` run in the main projects directory.  
-  - `update` works in both, prompting for project selection if needed.
-- Rich terminal output with color-coded tables using the Rich library.
-- Centralized metadata file operations for consistency and maintainability.
-- Easy version management with a single-source version string.
-- Automatic dependency installation via `setup.py`.
+- Project initialization with metadata (`.projectmeta`)
+- Task and Deliverable CRUD support via CLI
+- YAML-driven rule engine for automated workflows
+- Dynamic CLI prompts (powered by `InquirerPy`)
+- Git integration (tagging, pushing)
+- Changelog tracking
+- Tag autocomplete and validation
+- Modular and testable architecture
+
+## 🗂️ Project Structure
+
+Tracklet/
+├── tracklet/
+│ ├── cli/ # CLI entrypoints
+│ ├── core/ # Business logic and rule engine
+│ ├── data_access/ # YAML file I/O and project tracking
+│ ├── utils/ # Prompting and formatting helpers
+├── rules/ # YAML definitions for metadata, validation, rules
+├── scripts/ # Project scripts (init, update, etc.)
 
 ## Installation
 
@@ -35,6 +38,10 @@ This installs all required dependencies automatically, including `InquirerPy`, `
 3. Ensure your Python user scripts directory (e.g., `~/.local/bin` or `%APPDATA%\Python\Scripts`) is in your system `PATH` so you can run `tracklet` from the command line.
 
 ## Usage
+
+tracklet project init
+tracklet task create
+tracklet deliverable list
 
 ### Command Overview
 
@@ -124,6 +131,12 @@ tracklet uninit
 ```
 
 - Prompts for confirmation unless `--force` is used.
+
+## 🧩 Extending
+
+-Add rules to rules/operations/ for automated actions
+-Modify metadata in .projectmeta
+-Customize prompts in tracklet/utils/prompt.py
 
 ## Unistallation
 

@@ -1,0 +1,16 @@
+
+- id: unit_test
+  extends: test
+  description: "Test cases for individual functions"
+
+- id: e2e_test
+  extends: test
+  description: "End-to-end system-level validation"
+
+- id: spec_doc
+  extends: report
+  description: "Formal specification document"
+
+- id: ci_report
+  extends: report
+  description: "Logs and artifacts from CI runs"

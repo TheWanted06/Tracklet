@@ -1,0 +1,9 @@
+- trigger: "task_marked_completed"
+  sync:
+    - remove_corresponding_deliverables
+    - log_to: "changelog.yaml"
+
+- trigger: "new_deliverable_added"
+  sync:
+    - update: "tasks.yaml"
+    - add_comment: "New deliverable linked"

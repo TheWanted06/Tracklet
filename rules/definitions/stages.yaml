@@ -1,0 +1,38 @@
+version: 1.0
+
+stages:
+  - id: "planning"
+    title: "Planning"
+    default: true
+    description: "Initial phase for defining scope and objectives"
+    allowed_transitions: ["development", "abandoned"]
+  
+  - id: "development"
+    title: "Development"
+    description: "Building and coding core functionality"
+    allowed_transitions: ["testing", "on_hold"]
+
+  - id: "testing"
+    title: "Testing"
+    description: "Trying to break the app"
+    allowed_transitions: ["staging", "abandoned"]
+
+  - id: "staging"
+    title: "Staging"
+    description: "Pre-production testing and integration"
+    allowed_transitions: ["production", "abandoned"]
+
+  - id: "production"
+    title: "Production"
+    terminal: true
+    description: "Live and deployed phase"
+
+  - id: "abandoned"
+    title: "Abandoned"
+    terminal: true
+    description: "No longer active or relevant"
+
+  - id: "on_hold"
+    title: "On Hold"
+    allowed_transitions: ["development", "abandoned"]
+    description: "Paused indefinitely or waiting for input"

@@ -1,0 +1,9 @@
+- type: "generate_prd"
+  prompt: >
+    "Create a PRD based on this user intent: {{summary}}.
+     Ensure outputs align with tracklet standards and include risk and success metrics."
+
+- type: "review_task"
+  prompt: >
+    "You are a senior developer reviewing this task. Validate scope, dependencies, and clarity.
+     Suggest edits if it's ambiguous or missing deliverables."

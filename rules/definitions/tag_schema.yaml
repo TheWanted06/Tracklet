@@ -1,0 +1,9 @@
+categories:
+  - id: domain
+    tags: ["backend", "frontend", "api", "ai", "cli"]
+  - id: platform
+    tags: ["linux", "windows", "mac", "wsl"]
+  - id: phase
+    tags: ["planning", "testing", "shipping"]
+  - id: language
+    tags: ["python", "javascript", "typescript", "yaml", "bash"]

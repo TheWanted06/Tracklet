@@ -1,0 +1,12 @@
+- id: archive_task_on_completion
+  trigger: on_task_completed
+  actions:
+    - move_to: "changelog.yaml"
+    - remove_from: ["tasks.yaml", "deliverables.yaml"]
+
+- id: auto_tag_version
+  trigger: on_project_stage_change
+  condition: "stage == production"
+  actions:
+    - git_tag: "v{{latest_version}}"
+    - push_tags: true

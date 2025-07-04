@@ -1,6 +1,9 @@
 import os
 from .metadata import read_metadata
 
+def is_project_folder(path: str) -> bool:
+    return os.path.isfile(os.path.join(path, ".projectmeta"))
+
 def collect_all_tags(base_path):
     tags_set = set()
 

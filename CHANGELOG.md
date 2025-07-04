@@ -4,6 +4,34 @@ All notable changes to Tracklet are documented here to provide a clear and detai
 
 ---
 
+## [v0.5.0] - 2025-06-27
+
+### 🧱 Major Refactor
+
+- Completely modularized CLI into:
+  - `project_cli.py`
+  - `task_cli.py`
+  - `deliverable_cli.py`
+- Separated business logic into `core/`:
+  - `task_ops.py`, `deliverable_ops.py`, `rules_engine.py`, etc.
+- Created `data_access/`:
+  - `file_io.py`, `metadata.py`, `tracker.py`
+- Implemented autocomplete tag selection using `InquirerPy.fuzzy()`
+- Added fallback for empty autocomplete to prevent crashes
+- Introduced `utils/formats.py` with rich console formatting
+- Added tag collection from existing `.projectmeta` files
+- Added validation to tasks and deliverables
+- Ensured `setup.py` uses proper `entry_points` and installable CLI
+- Fixed all import issues post-refactor
+- Fully functional `tracklet project init` with prompts
+
+### 🐛 Fixes
+
+- CLI now correctly handles invalid commands and missing metadata
+- Improved feedback for missing or invalid project folders
+
+---
+
 ## [0.4.0] - 2025-06-21
 
 ### Added

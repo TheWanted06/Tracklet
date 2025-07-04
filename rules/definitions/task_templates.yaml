@@ -1,0 +1,15 @@
+version: 1.0
+
+templates:
+  - id: "build_cli_command"
+    title: "Build CLI command: {{command_name}}"
+    description: "Implement {{command_name}} for CLI interface"
+    default_tags: ["cli", "command"]
+    required_fields: ["command_name", "files_touched"]
+    quality_gates: ["pytest_pass", "cli_help_doc"]
+
+  - id: "scaffold_yaml_template"
+    title: "Scaffold {{template_type}} template"
+    description: "Generate default structure for {{template_type}} (e.g., PRD, tasklist)"
+    tags: ["template", "generation"]
+    quality_gates: ["schema_valid"]

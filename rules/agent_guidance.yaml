@@ -1,0 +1,8 @@
+- scenario: "task_start"
+  instruction: "Summarize linked PRD section and define your plan of action before coding"
+
+- scenario: "task_blocked"
+  instruction: "Log reason for block and assign fallback assignee if timeout exceeds 12h"
+
+- scenario: "quality_gate_failure"
+  instruction: "Debug test failure, document retry count, and escalate after 3 failed retries"

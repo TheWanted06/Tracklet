@@ -1,0 +1,19 @@
+- id: pytest_pass
+  description: "All tests must pass"
+  applicable_to: ["code", "test"]
+
+- id: coverage_80
+  description: "80% or greater test coverage"
+  applicable_to: ["test"]
+
+- id: eslint_clean
+  description: "No lint errors"
+  applicable_to: ["code"]
+
+- id: schema_valid
+  description: "Must pass schema validation"
+  applicable_to: ["config", "template"]
+
+- id: build_success
+  description: "CI build must complete successfully"
+  applicable_to: ["code", "cli"]

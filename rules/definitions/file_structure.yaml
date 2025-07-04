@@ -1,0 +1,11 @@
+- required:
+    - path: tracklet/cli.py
+    - path: tracklet/__init__.py
+    - path: setup.py
+    - path: README.md
+
+- recommended:
+    - path: tests/
+    - path: prd.yaml
+    - path: tasks.yaml
+    - path: deliverables.yaml

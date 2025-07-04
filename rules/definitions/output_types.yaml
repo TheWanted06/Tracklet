@@ -1,0 +1,17 @@
+- id: code
+  description: "Application or library code"
+
+- id: test
+  description: "Unit or integration tests"
+
+- id: report
+  description: "Documentation or reports"
+
+- id: diagram
+  description: "Design or architecture visuals"
+
+- id: config
+  description: "YAML, JSON, or TOML files"
+
+- id: script
+  description: "Executable or helper scripts"

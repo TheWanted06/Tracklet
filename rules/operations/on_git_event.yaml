@@ -1,0 +1,12 @@
+- id: update_changelog_on_push
+  trigger: on_git_push
+  condition: "has_new_completions"
+  actions:
+    - commit_file: "changelog.yaml"
+    - push: true
+
+- id: validate_branch_naming
+  trigger: on_git_commit
+  actions:
+    - check_branch_pattern: "feature/*, bugfix/*"
+    - notify_if_invalid: true

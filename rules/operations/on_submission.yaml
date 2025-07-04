@@ -1,0 +1,12 @@
+- id: validate_quality_on_submit
+  trigger: on_deliverable_submitted
+  actions:
+    - run_checks: ["pytest_pass", "eslint_clean"]
+    - approve_if_passed: true
+    - reject_if_failed: true
+
+- id: notify_review_team
+  trigger: on_deliverable_submitted
+  actions:
+    - send_notification: "reviewers"
+    - attach: ["report.md", "test_results.json"]

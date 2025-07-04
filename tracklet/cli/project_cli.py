@@ -1,26 +1,14 @@
 import argparse
 import os
 from pathlib import Path
-from .metadata import create_default_metadata, read_metadata, write_metadata, STAGES, delete_metadata
-from .tracker import find_projects, filter_projects, summarize_progress, list_projects, collect_all_tags
-from .utils import is_project_folder, prompt_tags_with_autocomplete
+from tracklet.data_access.metadata import create_default_metadata, read_metadata, write_metadata, STAGES, delete_metadata
+from tracklet.data_access.tracker import find_projects, filter_projects, summarize_progress, list_projects, collect_all_tags
+from tracklet.utils.prompt import prompt_text_list,prompt_multi_select, prompt_tags_with_autocomplete, prompt_text, is_project_folder,prompt_select
+
 from InquirerPy import inquirer
 from rich.console import Console
 from rich.table import Table
 
-
-def prompt_multi_select(message, choices):
-    """Helper to prompt multi-select and return list."""
-    return inquirer.checkbox(
-        message=message,
-        choices=choices,
-        cycle=True,
-    ).execute()
-
-def prompt_text_list(message):
-    """Prompt for comma-separated list and return list of trimmed strings."""
-    text = inquirer.text(message=message).execute()
-    return [t.strip() for t in text.split(",") if t.strip()]
 
 def handle_search(args):
     base_path = os.getcwd()
@@ -403,26 +391,25 @@ def handle_init(args):
     # Prompt for author
     author = args.author
     if author is None:
-        author = inquirer.text(message="Author:").execute()
+        author=prompt_text("Author:")
 
     # Prompt for description
     description = args.description
     if description is None:
-        description = inquirer.text(message="Description:").execute()
+        description = prompt_text("Description:")
 
     # Prompt for stage with validation
     stage = args.stage
     if stage not in STAGES:
         if stage is not None:
             print(f"Warning: '{stage}' is not a valid stage. Please select from the list.")
-        stage = inquirer.select(
-            message="Select project stage:",
-            choices=STAGES,
-            default=STAGES[0],
-            cycle=True,
-        ).execute()
+        stage = prompt_select(
+            "Select project stage:",
+            STAGES
+        )
 
-    # Prompt for tags (comma-separated)
+    # Prompt for tags (comma-separated)'
+    tags = args.tag
     if args.tag:
         tags = [t.strip() for t in args.tag.split(",") if t.strip()]
     else:
@@ -433,25 +420,26 @@ def handle_init(args):
 
     print(f"Project initialized successfully in {project_path}")
 
-
-def create_parser():
-    parser = argparse.ArgumentParser(prog="tracklet")
-    subparsers = parser.add_subparsers(dest="command", required=True)
+def register_project_commands(subparsers):
+    project_parser = subparsers.add_parser("project", help="Project commands")
+    project_sub = project_parser.add_subparsers(dest="command", required=True)
 
     # init command
-    parser_init = subparsers.add_parser("init", help="Initialize a project")
+    parser_init = project_sub.add_parser("init", help="Initialize a project")
     parser_init.add_argument("-n", "--name", nargs='?', const=None, help="Project name")
     parser_init.add_argument("-a", "--author", nargs='?', const=None, help="Author")
     parser_init.add_argument("-d", "--description", nargs='?', const=None, help="Description")
     parser_init.add_argument("-s", "--stage", nargs='?', const=None, help="Stage")
     parser_init.add_argument("-t", "--tag", nargs='?', const=None, help="Tags (comma-separated)")
+    parser_init.set_defaults(func=handle_init)
 
     # uninit command
-    parser_uninit = subparsers.add_parser("uninit", help="Uninitialize a project")
+    parser_uninit = project_sub.add_parser("uninit", help="Uninitialize a project")
     parser_uninit.add_argument("-f", "--force", action="store_true", help="Force uninit without confirmation")
+    parser_uninit.set_defaults(func=handle_uninit)
 
     # update command
-    parser_update = subparsers.add_parser("update", help="Update project metadata")
+    parser_update = project_sub.add_parser("update", help="Update project metadata")
     parser_update.add_argument("-n", "--name", nargs='?', const=None, help="Project name")
     parser_update.add_argument("-a", "--author", nargs='?', const=None, help="Author")
     parser_update.add_argument("-d", "--description", nargs='?', const=None, help="Description")
@@ -465,13 +453,15 @@ def create_parser():
     parser_update.add_argument("-t", "--tag", nargs='?', const=None, help="Replace tags")
     parser_update.add_argument("-ta", "--tag-add", nargs='?', const=None, help="Add tags")
     parser_update.add_argument("-tr", "--tag-remove", nargs='?', const=None, help="Remove tags")
+    parser_update.set_defaults(func=handle_update)
 
     # list command
-    parser_list = subparsers.add_parser("list", help="List projects")
+    parser_list = project_sub.add_parser("list", help="List projects")
     parser_list.add_argument("-D", "--detailed", action="store_true", help="Show detailed info")
+    parser_list.set_defaults(func=handle_list)
 
     # search command
-    parser_search = subparsers.add_parser("search", help="Search projects")
+    parser_search = project_sub.add_parser("search", help="Search projects")
     parser_search.add_argument("-n", "--name", nargs='?', const=None, help="Search by name")
     parser_search.add_argument("-a", "--author", nargs='?', const=None, help="Search by author")
     parser_search.add_argument("-d", "--description", nargs='?', const=None, help="Search by description")
@@ -485,23 +475,4 @@ def create_parser():
     parser_search.add_argument("-t", "--tag", nargs='?', const=None, help="Search by tag")
     parser_search.add_argument("-ta", "--tag-add", nargs='?', const=None, help="Include tags")
     parser_search.add_argument("-tr", "--tag-remove", nargs='?', const=None, help="Exclude tags")
-
-    return parser
-
-def main():
-    parser = create_parser()
-    args = parser.parse_args()
-
-    if args.command == "init":
-        handle_init(args)
-    elif args.command == "uninit":
-        handle_uninit(args)
-    elif args.command == "update":
-        handle_update(args)
-    elif args.command == "list":
-        handle_list(args)
-    elif args.command == "search":
-        handle_search(args)
-
-if __name__ == "__main__":
-    main()
+    parser_search.set_defaults(func=handle_search)

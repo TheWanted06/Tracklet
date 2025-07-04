@@ -1,0 +1,27 @@
+- id: escalate_blocked_tasks
+  trigger: on_task_blocked
+  condition: "blocked_duration > 24h"
+  actions:
+    - notify: ["project_manager", "assignee"]
+    - escalate_to: "reviewer"
+
+- id: remind_on_stale_tasks
+  trigger: on_daily_check
+  condition: "last_updated > 72h"
+  actions:
+    - send_reminder: "assignee"
+    - tag_task: "stale"
+
+- id: enforce_due_dates
+  trigger: on_task_start
+  condition: "due_date exists"
+  actions:
+    - schedule_reminder: "1d_before_due"
+    - auto_block_if_overdue: true
+
+- id: deliverable_timeout_check
+  trigger: on_deliverable_pending
+  condition: "created_at + 3d < now"
+  actions:
+    - notify: "reviewer"
+    - auto_reassign: true

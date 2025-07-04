@@ -1,0 +1,10 @@
+- from: pending
+  to: ["submitted"]
+- from: submitted
+  to: ["approved", "rejected"]
+- from: rejected
+  to: ["pending", "submitted"]
+- from: approved
+  to: ["archived"]
+- from: archived
+  to: []

@@ -1,0 +1,7 @@
+- file: "tasks.yaml"
+  must_include: ["id", "status", "title", "priority"]
+  validate_schema: "semantic_fields.yaml"
+
+- file: "deliverables.yaml"
+  link_to: "tasks.yaml"
+  require_link: true

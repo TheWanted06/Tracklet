@@ -1,0 +1,13 @@
+- id: prevent_early_completion
+  trigger: on_task_status_change
+  condition: "quality_gates not passed"
+  actions:
+    - reject_transition: true
+    - notify: "Cannot mark task complete until all quality gates pass"
+
+- id: enforce_pr_existence
+  trigger: before_task_start
+  condition: "task_type == 'feature'"
+  actions:
+    - check_open_pr: true
+    - notify_if_missing: "Open a PR before starting task"

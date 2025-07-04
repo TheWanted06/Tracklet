@@ -1,0 +1,18 @@
+- id: task_id
+  type: string
+  required: true
+  pattern: "^T[0-9]+$"
+
+- id: deliverable_id
+  type: string
+  required: true
+  pattern: "^D[0-9]+$"
+
+- id: status
+  enum: [todo, in_progress, blocked, review, completed]
+
+- id: priority
+  enum: [low, medium, high, critical]
+
+- id: output_type
+  enum: [code, test, report, config, diagram, script]

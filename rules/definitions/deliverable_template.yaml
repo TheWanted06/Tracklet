@@ -1,0 +1,7 @@
+id: "D{{autogen_id}}"
+title: "{{short_title}}"
+task_ref: "T{{linked_task}}"
+path: "{{expected_path}}"
+output_type: "{{one_of: output_types}}"
+status: "pending"
+quality_gates: []

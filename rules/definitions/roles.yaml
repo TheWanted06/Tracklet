@@ -1,0 +1,14 @@
+- id: developer
+  description: "Writes code and tests"
+
+- id: reviewer
+  description: "Reviews code for quality and correctness"
+
+- id: maintainer
+  description: "Owns the repo and defines rules"
+
+- id: designer
+  description: "Provides UI/UX or architecture guidance"
+
+- id: ai_agent
+  description: "Automated agent performing task"
